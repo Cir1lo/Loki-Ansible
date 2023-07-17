@@ -1,0 +1,12 @@
+---
+# tasks file for Loki-Ansible
+
+- name: Instalando pacotes necessários
+  # become: yes
+  # import_tasks: installation.yml
+
+- name: Iniciando a instalação e configurações
+  become: yes
+  import_tasks: configuration-loki.yml
+
+ 

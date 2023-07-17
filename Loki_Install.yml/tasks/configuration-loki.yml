@@ -1,0 +1,21 @@
+- name: (1) Importar o arquivo de execusão do Loki
+  become: yes
+  get_url:
+    url: https://github.com/grafana/loki/releases/download/v2.8.2/loki-linux-amd64.zip
+    dest: /root
+    validate_certs: no
+
+- name: (2) Importar o arquivo de execusão do prontail
+  become: yes
+  get_url:
+    url: https://github.com/grafana/loki/releases/download/v2.8.2/promtail-linux-amd64.zip
+    dest: /root
+    validate_certs: no
+
+- name: (3) Descompactar o arquivo loki
+  become: yes
+  unarchive:
+    src: /root/loki-linux-amd64.zip
+    dest: /root
+    remote_src: yes
+
