@@ -2,20 +2,17 @@
   become: yes
   get_url:
     url: https://github.com/grafana/loki/releases/download/v2.8.2/loki-linux-amd64.zip
-    dest: /root
+    dest: /usr/local/bin/
     validate_certs: no
 
-- name: (2) Importar o arquivo de execusão do prontail
-  become: yes
-  get_url:
-    url: https://github.com/grafana/loki/releases/download/v2.8.2/promtail-linux-amd64.zip
-    dest: /root
-    validate_certs: no
-
-- name: (3) Descompactar o arquivo loki
+- name: (2) Descompactar o arquivo loki
   become: yes
   unarchive:
-    src: /root/loki-linux-amd64.zip
-    dest: /root
+    src: /usr/local/bin/loki-linux-amd64.zip
+    dest: /usr/local/bin/
     remote_src: yes
 
+- name: (2.1) Remover o arquivoo Zip do Loki
+  file:
+    path: /usr/local/bin/loki-linux-amd64.zip
+    state: absent

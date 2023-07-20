@@ -1,4 +1,4 @@
-- hosts: mattermost_servers
+- hosts: Loki_server
   become: yes
   roles:
     - Loki_Install.yml
