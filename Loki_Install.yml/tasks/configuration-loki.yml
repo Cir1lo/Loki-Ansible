@@ -25,21 +25,21 @@
 #     mode: '0644'
 
 
-- name: (4) Criando serviço para o loki
-  copy:
-    content: |
-      [Unit]
-      Description=Loki service
-      After=network.target
+# - name: (4) Criando serviço para o loki
+#   copy:
+#     content: |
+#       [Unit]
+#       Description=Loki service
+#       After=network.target
 
-      [Service]
-      Type=simple
-      User=root
-      ExecStart=/usr/local/bin/loki-linux-amd64 -config.file=/usr/local/bin/loki-local-config.yaml
+#       [Service]
+#       Type=simple
+#       User=root
+#       ExecStart=/usr/local/bin/loki-linux-amd64 -config.file=/usr/local/bin/loki-local-config.yaml
 
-      [Install]
-      WantedBy=multi-user.target
-    dest: /etc/systemd/system/loki.service
+#       [Install]
+#       WantedBy=multi-user.target
+#     dest: /etc/systemd/system/loki.service
 
 - name: (5) Recarregar o daemon do systemd
   systemd:
