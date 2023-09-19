@@ -1,45 +1,50 @@
-# - name: (1) Importar o arquivo de execusão do Loki
-#   become: yes
-#   get_url:
-#     url: https://github.com/grafana/loki/releases/download/v2.8.2/loki-linux-amd64.zip
-#     dest: /usr/local/bin/
-#     validate_certs: no
+- name: (1) Importar o arquivo de execusão do Loki
+  become: yes
+  get_url:
+    url: https://github.com/grafana/loki/releases/download/v2.8.2/loki-linux-amd64.zip
+    dest: /usr/local/bin/
+    validate_certs: no
 
-# - name: (2) Descompactar o arquivo loki
-#   become: yes
-#   unarchive:
-#     src: /usr/local/bin/loki-linux-amd64.zip
-#     dest: /usr/local/bin/
-#     remote_src: yes
+- name: (2) Descompactar o arquivo loki
+  become: yes
+  unarchive:
+    src: /usr/local/bin/loki-linux-amd64.zip
+    dest: /usr/local/bin/
+    remote_src: yes
 
-# - name: (2.1) Remover o arquivoo Zip do Loki
-#   file:
-#     path: /usr/local/bin/loki-linux-amd64.zip
-#     state: absent
+- name: (2.1) Remover o arquivoo Zip do Loki
+  file:
+    path: /usr/local/bin/loki-linux-amd64.zip
+    state: absent
 
-# - name: (3) Importar as configuraçoes Loki
-#   become: yes
-#   get_url:
-#     url: https://raw.githubusercontent.com/grafana/loki/main/cmd/loki/loki-local-config.yaml
-#     dest: /usr/local/bin/
-#     mode: '0644'
+- name: (3) Criando o diretório para as configurações Loki
+  file:
+    path: /etc/loki/config
+    state: directory
+
+- name: (3.1) Importar as configuraçoes Loki
+  become: yes
+  get_url:
+    url: https://raw.githubusercontent.com/grafana/loki/main/cmd/loki/loki-local-config.yaml
+    dest: /etc/loki/config
+    mode: '0644'
 
 
-# - name: (4) Criando serviço para o loki
-#   copy:
-#     content: |
-#       [Unit]
-#       Description=Loki service
-#       After=network.target
+- name: (4) Criando serviço para o loki
+  copy:
+    content: |
+      [Unit]
+      Description=Loki service
+      After=network.target
 
-#       [Service]
-#       Type=simple
-#       User=root
-#       ExecStart=/usr/local/bin/loki-linux-amd64 -config.file=/usr/local/bin/loki-local-config.yaml
+      [Service]
+      Type=simple
+      User=root
+      ExecStart=/usr/local/bin/loki-linux-amd64 -config.file=/etc/loki/config/loki-local-config.yaml
 
-#       [Install]
-#       WantedBy=multi-user.target
-#     dest: /etc/systemd/system/loki.service
+      [Install]
+      WantedBy=multi-user.target
+    dest: /etc/systemd/system/loki.service
 
 - name: (5) Recarregar o daemon do systemd
   systemd:
